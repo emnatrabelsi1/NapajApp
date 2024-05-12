@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Préparation{% endblock %}
+
+{% block body %}
+    <h1>{{ preparation.name }}</h1>
+    <a href="{{ path('app_preparation_edit', {'id': preparation.id}) }}"><button class="btn btn-secondary btn-sm add_button" type="button">Modifier</button></a>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ preparation.id }}</td>
+            </tr>
+            <tr>
+                <th>Poids préparation (g)</th>
+                <td>{{ preparation.weight|number_format(0, ',', ' ')  }} g</td>
+            </tr>
+            <tr>
+                <th>Ingrédients</th>
+                <td>
+                    {% set allergens = [] %}
+
+                    {% set total_cost = 0 %}
+                    {% for preparationIngredient in preparation.getPreparationIngredients %}
+                        {% if preparationIngredient.ingredient.allergen and (preparationIngredient.ingredient.allergen.name not in allergens) %}
+                            {% set allergens = allergens|merge([preparationIngredient.ingredient.allergen.name]) %}
+                        {% endif %}
+
+                        {% set ingredient = preparationIngredient.ingredient %}
+                        {% set total_cost = total_cost + preparationIngredient.getCost %}
+                        
+                        <div class="row">
+                            <div class="col-3">
+                                {% if preparationIngredient.getCost == 0 %}
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <a target="_blank" href="{{ path("app_supplier_price_new",{ingredient_id: ingredient.id}) }}">{{ ingredient.code }}</a>
+                                {% else %}
+                                    {{ ingredient.code }}
+                                {% endif %}
+                                </div>
+                            <div class="col-3">
+                                {% if preparationIngredient.quantity > 0 %}
+                                    {{ preparationIngredient.quantity|number_format(0, ',', ' ') }} unité
+                                {% elseif preparationIngredient.volume > 0 %}
+                                    {{ preparationIngredient.volume|number_format(2, ',', ' ') }} L
+                                {% else %}
+                                    {{ preparationIngredient.weight|number_format(0, ',', ' ') }} g
+                                {% endif %}
+                                </div>
+                            <div class="col-3">
+                                {{ preparationIngredient.getCost|number_format(3, ',', ' ') }} €</div>
+                        </div>
+                    {% endfor %}
+                    <br/>
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-3"><b>Coût/Kg : </b></div>
+                        <div class="col-3">{% if preparation.weight > 0 %}
+                            <b>{{ (total_cost / (preparation.weight / 1000))|number_format(3, ',', ' ') }} €</b>
+                            {% else %}
+                            NC
+                            {% endif %}</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Allergènes</th>
+                <td>{% set at_least_one_allergen = false %}
+                    {% for allergenItem in allergens %}
+                        {% if at_least_one_allergen != false %} - {% endif %}
+                        {% set at_least_one_allergen = true %}
+                        {{ allergenItem }}
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_preparation_index') }}">Liste des préparations</a>
+
+    {{ include('preparation/_delete_form.html.twig') }}
+{% endblock %}

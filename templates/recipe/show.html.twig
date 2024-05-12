@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recipe{% endblock %}
+{% set active_link = 'recipe_index' %}
+{% block body %}
+    <h1>{{ recipe.Name }}</h1>    
+    <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}"><button class="btn btn-secondary btn-sm add_button" type="button">Modifier</button></a>
+    {% set recipe_weight = 0 %}
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ recipe.id }}</td>
+            </tr>
+            <tr>
+                <th>Code</th>
+                <td>{{ recipe.code }}</td>
+            </tr>
+            <tr>
+                <th>En cadre ?</th>
+                <td>{{ recipe.isFrame ? 'Oui' : 'Non' }}</td>
+            </tr>
+            
+            <tr>
+                <th>Préparations de la recette</th>
+                <td>
+                {% for composition in recipe.recipeCompositions %}
+                    {% set invalidPrice = false %}
+                    {% set missingIngredientPrice = [] %}
+                    {% if composition is defined %}
+                        {% if composition.getPreparation is not null  %}
+                            {% for preparationIngredient in composition.getPreparation.preparationIngredients %}
+                                {% if preparationIngredient.ingredient.price <= 0 %}
+                                    {% set invalidPrice = true %}
+                                    {% set id = preparationIngredient.ingredient.id %}
+                                    {% set missingIngredientPrice = missingIngredientPrice|merge({
+                                        (id): {
+                                            code: preparationIngredient.ingredient.code,
+                                            id: preparationIngredient.ingredient.id
+                                        }
+                                    }) %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+
+                    {% if missingIngredientPrice is not empty %}
+                        <div class="span_info"><i class="fa-solid fa-triangle-exclamation"></i>
+                            Prix manquants pour calcul du coût : 
+                            <ul>
+                            {% for ingredient in missingIngredientPrice %}
+                                <li><a target="_blank" href="{{ path("app_supplier_price_new",{ingredient_id: ingredient["id"]}) }}">{{ ingredient["code"] }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+
+                    <div class="row">
+                        <div class="col-5">
+                            {% if composition.getPreparation is not null %}
+                                <a target="_blank" href="{{ path('app_preparation_show',{ id:composition.getPreparation.getId }) }}"> {{ composition.getPreparation.getName }}</a>
+                            {% else %}
+                                <a target="_blank" href="{{ path('app_ingredient_show',{ id:composition.getIngredient.getId }) }}"> {{ composition.getIngredient.getName }}</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-3">
+                            {% if composition.getWeight > 0 %}
+                                {{ composition.getWeight|number_format(0, ',', ' ') }}g
+                            {% elseif composition.getQuantity > 0 %}
+                                {{ composition.getQuantity }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% set recipe_weight = recipe_weight + composition.getWeight %}
+                {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Poids de la recette</th>
+                <td>{{ recipe_weight|number_format(0, ',', ' ') }}g</td>
+            </tr>
+            <tr>
+                <th>Découpes</th>
+                <td>
+                {% for cutting in recipe.recipeCuttings %}
+                    {% set invalidPrice = false %}
+                    {% set missingIngredientPrice = [] %}
+                    {% if composition is defined %}
+                        {% for preparationIngredient in composition.getPreparation.preparationIngredients %}
+                            {% if preparationIngredient.ingredient.price <= 0 %}
+                                {% set invalidPrice = true %}
+                                {% set id = preparationIngredient.ingredient.id %}
+                                {% set missingIngredientPrice = missingIngredientPrice|merge({
+                                    (id): {
+                                        code: preparationIngredient.ingredient.code,
+                                        id: preparationIngredient.ingredient.id
+                                    }
+                                }) %}
+                            {% endif %}
+                        {% endfor %}
+                    
+
+                        {% if missingIngredientPrice is not empty %}
+                            <div class="span_info"><i class="fa-solid fa-triangle-exclamation"></i>
+                            Prix manquants pour calcul du coût : 
+                            <ul>
+                            {% for ingredient in missingIngredientPrice %}
+                                <li><a target="_blank" href="{{ path("app_supplier_price_new",{ingredient_id: ingredient["id"]}) }}">{{ ingredient["code"] }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+                            
+                        {% endif %}
+
+
+                        <div class="row">
+                            <div class="col-5"><a target="_blank" href="{{ path('app_preparation_show',{ id:composition.getPreparation.getId }) }}"> {{ composition.getPreparation.getName }}</a></a></div>
+                            <div class="col-3">{{ composition.getWeight|number_format(0, ',', ' ') }}g</div>
+                        </div>
+                        {% set recipe_weight = recipe_weight + composition.getWeight %}
+                    {% endif %}
+                {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <a href="{{ path('app_recipe_index') }}">Liste des recettes</a>
+
+    {{ include('recipe/_delete_form.html.twig') }}
+{% endblock %}

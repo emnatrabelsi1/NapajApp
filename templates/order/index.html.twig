@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{% import '/order/order_macro.html.twig' as order_macro %}
+
+{% block title %}Commandes{% endblock %}
+{% set active_link = 'order_index' %}
+
+{% block heading_h1 %}Commandes (<a href="{{ path('app_order_archive_index') }}">Voir les commandes archivées</a>){% endblock %}
+
+{% block body %}
+{{ encore_entry_script_tags('order-list') }}
+    <a class="pull-right" href="{{ path('app_order_new') }}"><button class="btn btn-primary add_button" type="button">Nouvelle commande</button></a>
+
+    {{ include('order/_filter.html.twig') }}
+    
+    <table class="table datatable">
+        <thead>
+            <tr>
+                <th class="display-none">Id</th>
+                <th>Client</th>
+                <th>Détail</th>
+                <th>Description</th>
+                <th>Départ (matin)</th>
+                <th>Date Livraison</th>
+                <th>Date évènement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set today = date() %}
+        {% set displayedWeek = false %}
+
+        {% for order in orders %}
+            {% set orderWeek = order.deliveryDate|date("W") %}
+            {% if orderWeek != displayedWeek %}
+                {% if orderWeek < today|date("W") %}
+                    {% if displayedWeek is same as false %}
+                        {# <tr class="delivery_week_header old_delivery_week_header">
+                            <td colspan="7">Anciennes commandes</td>
+                        </tr> #}
+                        {% set displayedWeek = 0 %}
+                    {% endif %}
+                {% else %}
+                    {% if displayedWeek != orderWeek %}
+                        {% set displayedWeek = orderWeek %}
+                        {% if displayedWeek == today|date("W") %}
+                            {% set labelWeek = 'Cette semaine' %}
+                        {% else %}
+                            {% set labelWeek = 'Semaine +'~ (displayedWeek - today|date("W"))%}
+                        {% endif %}
+                        {# <tr class="delivery_week_header">
+                            <td colspan="7">{{ labelWeek }}</td>
+                        </tr> #}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% set delivery_color_class = 'delivery_color_' ~ order.deliveryDate|dayInWeek() %}
+            <tr data-customerType="{{ order.customer.internal ? 'internal' : 'not_internal' }}"  data-customer-id="{{ order.customer.id }}" class="orderElement {{ (displayedWeek == 0) ? 'old_delivery_week_header' : '' }} {{ order.customer.isInternal is same as true ? 'internalOrder' : '' }}" id="orderElement{{ order.id }}">
+                <td class="display-none">{{ order.id }}</td>
+                <td><a target="_blank" href="{{ order.customer.route }}"><i class="fa-solid fa-road"></i> </a>{{ order.customer.name }}</td>
+                <td class="orderLineElement">
+                    {{ order_macro.displayOrderLinesInTable(order.orderLines, order.id) }}
+                </td>
+                <td>{{ order.name }} </td>
+                <td><h2><span class="badge {{ delivery_color_class }}">{{ order.deliveryDate|dayInWeek('fr') }}</span></h4></td>
+                <td>{{ order.deliveryDate ? order.deliveryDate|dateFormat(false): '' }}</td>
+                <td>{{ order.eventDate ? order.eventDate|dateFormat(false): '' }}</td>
+                <td >
+                    <span class="action_icon">
+                        <a href="{{ path('app_order_show', {'id': order.id}) }}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                        <a href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="fa-solid fa-pen fa-lg"></i></a>
+                        <a class="fakeBtn" onclick="if(confirm('Êtes-vous sûr de vouloir archiver cet élément ?')){archiveOrder('{{ path('app_order_archive',{'id': order.id}) }}', {{ order.id }} )};"><i class="fa-solid fa-box-archive fa-lg"></i></a>
+                    </span>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

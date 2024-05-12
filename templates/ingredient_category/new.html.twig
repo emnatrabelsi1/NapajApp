@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle categorie{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle categorie</h1>
+
+    {{ include('ingredient_category/_form.html.twig') }}
+
+    <a href="{{ path('app_ingredient_category_index') }}"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</a>
+{% endblock %}

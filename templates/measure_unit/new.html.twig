@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une unité{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une unité</h1>
+
+    {{ include('measure_unit/_form.html.twig') }}
+
+    <a href="{{ path('app_measure_unit_index') }}">Liste des unités</a>
+{% endblock %}

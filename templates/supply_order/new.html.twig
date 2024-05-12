@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New SupplyOrder{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle demande d'approvisionnement</h1>
+
+    {{ include('supply_order/_form.html.twig') }}
+
+    <a href="{{ path('app_supply_order_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des demandes</a>
+{% endblock %}

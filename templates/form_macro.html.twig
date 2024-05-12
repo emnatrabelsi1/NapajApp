@@ -1,0 +1,49 @@
+{% macro preparationIngredient_form_prototype(form, elem) %}
+    <div class="row collection_item">
+        <div class="col-4">{{ form_widget(form.ingredient) }}</div>
+        <div class="col-2">{{ form_widget(form.weight) }}</div>
+        <div class="col-2">{{ form_widget(form.volume) }}</div>
+        <div class="col-2">{{ form_widget(form.quantity) }}</div>
+        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+    </div>
+{% endmacro %}
+
+{% macro recipeCompositions_form_prototype(form, elem) %}
+    <div class="row collection_item">
+        <div class="col-3">{{ form_widget(form.preparation) }}</div>
+        <div class="col-3">{{ form_widget(form.ingredient) }}</div>
+        <div class="col-2">{{ form_widget(form.weight) }}</div>
+        <div class="col-2">{{ form_widget(form.volume) }}</div>
+        <div class="col-1">{{ form_widget(form.quantity) }}</div>
+        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+    </div>
+{% endmacro %}
+
+{% macro recipeCuttings_form_prototype(form, elem) %}
+    <div class="row collection_item">
+        <div class="col-5">{{ form_widget(form.piece) }}</div>
+        <div class="col-3">{{ form_widget(form.loss_percentage) }}</div>
+        <div class="col-3">{{ form_widget(form.info) }}</div>
+        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+    </div>
+{% endmacro %}
+
+{% macro supplierPrices_form_prototype(form, elem) %}
+    <div class="row collection_item">
+        <div class="col-2">{{ form_widget(form.created_at) }}</div>
+        <div class="col-4">{{ form_widget(form.supplier) }}</div>
+        <div class="col-3">{{ form_widget(form.name) }}</div>
+        <div class="col-2">{{ form_widget(form.price) }}</div>
+        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+    </div>
+{% endmacro %}
+
+{% macro orderLines_form_prototype(form, elem) %}
+    <div class="row collection_item">
+        <div class="col-4">{{ form_widget(form.product) }}</div>
+        <div class="col-1">{{ form_widget(form.quantity) }}</div>
+        <div class="col-5">{{ form_widget(form.details) }}</div>
+        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+    </div>
+{% endmacro %}
+

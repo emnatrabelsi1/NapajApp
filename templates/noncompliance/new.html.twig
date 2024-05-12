@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle non-conformité{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle non-conformité</h1>
+
+    {{ include('noncompliance/_form.html.twig',{'action':'new'}) }}
+
+    <a href="{{ path('app_noncompliance_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des non-conformités</a>
+{% endblock %}

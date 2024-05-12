@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SupplyOrder{% endblock %}
+
+{% block body %}
+    <h1>Demande d'approvisionnement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ supply_order.createdAt ? supply_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Demandeur</th>
+                <td>{{ supply_order.user is not null ? supply_order.user.email : '' }}</td>
+            </tr>
+            <tr>
+                <th>Fournisseur</th>
+                <td>{{ supply_order.supplier.name }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ supply_order.amount }}</td>
+            </tr>
+            <tr>
+                <th>Commentaire</th>
+                <td>{{ supply_order.comment }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_supply_order_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des demandes</a>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ include('supply_order/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}

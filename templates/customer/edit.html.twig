@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un client{% endblock %}
+{% set active_link = 'customer_index' %}
+
+{% block body %}
+    <h1>Modifier un client</h1>
+    <br/>
+    {{ include('customer/_form.html.twig', {'button_label': 'Valider'}) }}
+    <br/>
+    {{ include('customer/_delete_form.html.twig') }}
+
+
+    <a href="{{ path('app_customer_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des clients</a>   
+
+{% endblock %}

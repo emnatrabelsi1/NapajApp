@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catégories d'ingrédients{% endblock %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_ingredient_category_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Catégories d'ingrédients</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ingredient_category in ingredient_categories %}
+            <tr>
+                <td>{{ ingredient_category.id }}</td>
+                <td>{{ ingredient_category.name }}</td>
+                <td>
+                    <a href="{{ path('app_ingredient_category_show', {'id': ingredient_category.id}) }}"><i class="fa-regular fa-eye"></i></a>
+                    <a href="{{ path('app_ingredient_category_edit', {'id': ingredient_category.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

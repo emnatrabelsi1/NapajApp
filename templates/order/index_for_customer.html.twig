@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+{% set active_link = 'order_index' %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_order_new') }}"><button class="btn btn-primary add_button" type="button">Nouvelle commande</button></a>
+    <h1>Mes commandes</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="display-none">Id</th>
+                <th>Détail</th>
+                <th>Description</th>
+                <th>Jour</th>
+                <th>Livraison demandée</th>
+                <th>Date évènement</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% set today = date() %}
+        {% set displayedWeek = false %}
+
+        {% for order in orders %}            
+            <tr class="orderElement" id="orderElement{{ order.id }}">
+                <td class="display-none">{{ order.id }}</td>
+                <td class="orderLineElement">
+                    {% for orderLine in order.orderLines %}
+                        {% if orderLine.product is not null %}
+                            <b>{{ orderLine.quantity|number_format(0, ',', ' ') }}x</b> {{ orderLine.product.getFullName }}<br/>
+                        {% endif %}
+                        {% if orderLine.details is not null %}
+                            {% if orderLine.quantity is not null %}
+                                <b>{{ orderLine.quantity|number_format(0, ',', ' ') }}x</b>  
+                            {% endif %}
+                            {{ orderLine.details }}<br/>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                {% set delivery_color_class = 'delivery_color_' ~ order.deliveryDate|dayInWeek() %}
+                <td>{{ order.name }} </td>
+                <td><h2><span class="badge {{ delivery_color_class }}">{{ order.deliveryDate|dayInWeek('fr') }}</span></h4></td>
+                <td>{{ order.deliveryDate ? order.deliveryDate|dateFormat(false): '' }}</td>
+                <td>{{ order.eventDate ? order.eventDate|dateFormat(false): '' }}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                <td >
+                    <span class="action_icon">
+                        <a href="{{ path('app_order_show', {'id': order.id}) }}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                        <a href="{{ path('app_order_edit', {'id': order.id}) }}"><i class="fa-solid fa-pen fa-lg"></i></a>
+                        <a class="fakeBtn" onclick="archiveOrder('{{ path('app_order_archive',{'id': order.id}) }}', {{ order.id }} )"><i class="fa-solid fa-box-archive fa-lg"></i></i></a>
+                    </span>
+                </td>
+                {% endif %}
+                
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

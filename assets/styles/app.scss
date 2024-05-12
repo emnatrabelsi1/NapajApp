@@ -1,0 +1,347 @@
+@import "~select2/dist/css/select2.css";
+@import "./_variables.scss";
+@import "./_buttons.scss";
+@import "./cards.scss";
+@import "./charts.scss";
+@import "./dropdowns.scss";
+@import "./footer.scss";
+@import "./global.scss";
+@import "./login.scss";
+@import "./mixins.scss";
+@import '~js-datepicker/src/datepicker';
+@import "./navs/_topbar.scss";
+
+body {
+    //background-color: white;
+}
+.amount{
+    text-align: right;
+}
+#top_menu{
+    display: flex;              
+    padding:0;                  
+    background-color: #ccc;   
+    justify-content: center;
+}
+#top_menu li {
+    list-style-type: none ;       
+}
+#top_menu li a {
+    display:block;                
+    min-width: 140px;             /* Largeur minimale des liens */
+    margin: 0.5rem;               /* Marges externes (1 valeurs = 4 directions) */
+    padding: 0.4rem 0;            /* Marges internes (2 valeurs = haut/bas et gauche/droite)*/
+    text-align: center;           
+    background-color: #63998d; 
+    color: #fff;                
+    text-decoration: none; 
+    border: 1px solid #fff;  
+    border-radius: 4px;
+    transition: all 1s ;          /* Ajout des effets de transition */
+}
+#top_menu li a:hover {
+    background-color: #f1ab5e;
+    color: #fff;
+    border-color: #fff;
+}
+#top_menu li a.actif {    
+    background-color: #000 ; 
+    color: #1ABC9C ;
+    border-color: #1ABC9C ;
+}
+
+.action_icon{
+    padding: 10px;
+    cursor: pointer;
+    width: 100% !important;
+    display: inline-flex !important;
+}
+.action_icon a, .action_icon span{
+    margin: auto;
+    padding: 0 6px;
+}
+
+.pull-left{
+    float: left;
+}
+.pull-right{
+    float: right;
+}
+.center{
+    text-align: center;
+}
+
+.action_icon{
+    text-align: center;
+    vertical-align: middle !important;
+    display: table-cell;
+}
+
+.span_info{
+    background-color: lightgray;
+    padding:15px;
+    border-radius: 15px;
+
+    ul{
+        margin-bottom: 0;
+    }
+}
+
+.cuttingDetails{
+    font-size: 13px;
+    border: solid 1px goldenrod;
+    padding: 2px;
+}
+
+.codeTable{
+    color: grey;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.display-none{
+   display: none !important; 
+}
+
+.delivery_week_header{
+    line-height: 30px;
+}
+
+.delivery_week_header{
+    color: black;
+    font-weight: bold;
+}
+.delivery_week_header td{
+    background-color: #efe9e1;
+    border-top: black solid 3px !important;
+}
+.delivery_color_Monday{
+    line-height: 20px;
+    background-color: #63998d;
+}
+.delivery_color_Tuesday{
+    background-color: #617168;
+}
+
+.delivery_color_Wednesday{
+    background-color: #d6be4a;
+}
+.delivery_color_Thursday{
+    background-color: #91321c;
+}
+.delivery_color_Friday{
+    background-color: #f1ab5e;
+}
+
+.delivery_color_Saturday{
+    background-color: #636e76;
+}
+.delivery_color_Sunday{
+    background-color: #EF74E1;
+}
+
+.old_delivery_week_header td{
+    background-color: gainsboro;
+}
+
+.internalOrder td{
+    background-color: lightgoldenrodyellow;
+}
+
+.select2-selection.select2-selection--single{
+    height: 38px;
+}
+
+.select2-selection__rendered{
+    line-height: 38px !important;
+}
+
+.archived_order_table tr td{
+    background-color: #b2aeae;
+}
+
+.orderLineElement{
+    line-height: 20px;
+}
+
+ul.orderLines, ul.preparationIngredients, ul.recipeCompositions, ul.recipeCuttings {
+    list-style-type: none;
+    padding-left: 0;
+}
+.checkbox_in_table{
+    height: 15px;
+    width: 15px;
+}
+
+.additionnal_input_info{
+    margin-top: -17px;
+    right: 12px !important;
+    position: absolute;
+    font-size: 12px;
+}
+
+.select2-container{
+    width: 100% !important;
+}
+
+.large_select2Dropdown{
+    width: 700px !important;
+}
+.large_select2Dropdown, .large_select2Dropdown > .select2-results, .large_select2Dropdown > .select2-results > .select2-results__options{
+    min-height: 500px !important;
+}
+
+.tag_filter_row{
+    line-height: 30px;
+}
+.button_filter{
+    border: solid 1px #91321c;
+    background-color: #91321c70;
+    cursor: pointer;
+    padding: 5px 7px;
+    border-radius: 13px;
+    margin-right: 12px;
+    color: white;
+}
+.out_of_stock_filter{
+    border: solid 1px grey;
+    background-color: rgb(198, 197, 197);
+    cursor: pointer;
+    padding: 5px 7px;
+    border-radius: 13px;
+    margin-right: 12px;
+    color: white;
+}
+
+.tag_filter_selected{
+    background-color: #91321c;
+}
+.out_of_stock_filter_selected{
+    background-color: grey;
+}
+
+.dataTables_filter{
+    float: right;
+}
+
+.vich-image > a > img {
+    width: 100px;
+}
+
+.productInSelect{
+    border-bottom: solid 1px grey;
+    padding-bottom: 8px;
+}
+
+.productImgInSelect{
+    min-width: 100px;
+    display: inline-block;
+}
+.productImgInSelect > img{
+    max-width: 100px;
+    height: 100px;
+}
+.productDetailInSelect{
+    padding: 0px 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: 80%;
+}
+.productNameInSelect{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.productPieceQuantityInSelect{
+    font-size: 12px;
+}
+
+.marginPrice{
+    font-size:14px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.marginPrice_green{
+    background-color: mediumseagreen;
+    color: white;
+}
+.marginPrice_red{
+    background-color: lightcoral;
+    color: white;
+}
+.marginPrice_orange{
+    background-color: orange;
+    color: white;
+}
+
+.recipePriceKg{
+    color: grey;
+    font-size:14px;
+}
+
+.inline-block{
+    display: inline-block;
+}
+
+.fakeBtn{
+    border: none;
+    color:#91321c;
+    background-color: transparent;
+}
+
+.flashMsg{
+    width: 30%;
+    position: fixed !important;
+    right: 10px;
+}
+
+.closeFlashMsg{
+    columns: grey;
+    right: 8px;
+    font-size: 25px;
+    position: absolute;
+    top: 1px;
+    cursor: pointer;
+}
+
+.disabled_link{
+    color: grey;
+    cursor: not-allowed;
+}
+.disabled_link:hover{
+    color: grey;
+}
+
+.deactivated{
+    background-color: #e9ecef;
+    color: #6e707e;
+}
+
+.loginArea{
+    margin-top: 20%;
+    text-align: center;
+}
+.loginArea > label{
+    width:200px;
+}
+.sidebar_offline{
+    width: 100% !important;
+    min-height: 100vh;
+}
+
+.sidebar_offline{
+
+    text-align: center;
+}
+.sidebar_offline > h1.appName{
+    color: white;
+    font-size: 80px;
+    margin-top: 20%;
+}
+
+.sidebar_offline > h2.appBaseline{
+    color: white;
+}

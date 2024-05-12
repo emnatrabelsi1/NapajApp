@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ingredients{% endblock %}
+{% set active_link = 'ingredient_index' %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_ingredient_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Liste des ingrédients</h1>
+    <table class="datatable table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Libellé</th>
+                <th>Catégorie</th>
+                <th>Allergène</th>
+                <th>Unité</th>
+                <th>Prix min</th>
+                <th>Prix max</th>
+                <th>Saisie Prix</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entry in ingredients %}
+            {% set ingredient = entry[0] %}
+            <tr>
+                <td>{{ ingredient.id }}</td>
+                <td><a href="{{ path('app_ingredient_edit', {'id': ingredient.id}) }}">{{ ingredient.code }}</a></td>
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.ingredientCategory ? ingredient.ingredientCategory.name : '' }}</td>
+                <td>{{ ingredient.allergen ? ingredient.allergen.name : '' }}</td>
+                <td>{{ ingredient.measureUnit.name }}</td>
+                <td>{{ entry["min_price"]|number_format(3, ',', ' ') }} €</td>
+                <td>{{ entry["max_price"]|number_format(3, ',', ' ') }} €</td>
+                <td class="center">
+                    <span class="action_icon">
+                    <a target="_blank" href="{{ path("app_supplier_price_new",{ingredient_id: ingredient.id}) }}"><i class="fa-solid fa-comments-dollar"></i></a></li>
+                    {%  if is_granted('ROLE_ADMIN') %}
+                        {% if ingredient.isDeletable is same as true %}                        
+                            <a class="fakeBtn" target="_blank" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')){ ajaxCallFct('{{ path('app_ingredient_delete', {'id': ingredient.id}) }}',location.reload());}""><i class="fa-solid fa-trash"></i></a></li>
+                        {% else %}
+                            <a class="disabled_link" aria-disabled="true"><i class="fa-solid fa-trash"></i></a>
+                        {% endif %}
+                    {% endif %}
+                    </span>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>Aucune donnée disponible</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

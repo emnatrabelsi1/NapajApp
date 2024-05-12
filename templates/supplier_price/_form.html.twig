@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.ingredient) }}</div>
+    <div class="col-md-4">{{ form_row(form.supplier) }}</div>
+</div>
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.name) }}</div>
+    <div class="col-md-4">{{ form_row(form.price) }}</div>
+
+    <div class="hidden display-none">{{ form_row(form.created_at) }}</div>
+</div>
+{{ form_errors(form) }}
+    <button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

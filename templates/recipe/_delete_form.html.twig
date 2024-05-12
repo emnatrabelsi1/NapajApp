@@ -1,0 +1,8 @@
+<form method="post" action="{{ path('app_recipe_delete', {'id': recipe.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ recipe.id) }}">
+    {% if btn_type is defined and btn_type == 'fa-trash' %}
+        <button class="fakeBtn"><i class="fa-solid fa-trash"></i></button>
+    {% else %} 
+        <br/> <button class="btn btn-danger pull-right">Supprimer</button>
+    {% endif %}
+</form>

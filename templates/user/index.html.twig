@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des recettes{% endblock %}
+{% set active_link = 'recipe_index' %}
+{% block body %}
+    <h1>Liste Utilisateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Entreprise</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.company }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}"><i class="fa-regular fa-eye"></i></a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{{ path('app_register') }}">Nouvel utilisateur</a>
+
+{% endblock %}

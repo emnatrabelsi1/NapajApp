@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier catégorie ingrédient{% endblock %}
+
+{% block body %}
+    <h1>Modifier catégorie ingrédient</h1>
+
+    {{ include('ingredient_category/_form.html.twig', {'button_label': 'Valider'}) }}
+
+    <a href="{{ path('app_ingredient_category_index') }}"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</a>
+
+    {{ include('ingredient_category/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des préparations{% endblock %}
+{% set active_link = 'preparation_index' %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_preparation_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Liste des préparations</h1>
+    <table class="datatable table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Allergènes</th>
+                <th class="center">Poids (g)</th>
+                <th class="center">Coût (€)</th>
+                <th class="center">Coût au Kg (€)</th>
+                <th class="center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for preparation in preparations %}
+            {% set invalidPrice = false %}
+            {% set missingIngredientPrice = [] %}
+            {% set allergens = [] %}
+            {% for preparationIngredient in preparation.preparationIngredients %}
+                {% if preparationIngredient.ingredient.price <= 0 %}
+                    {% set invalidPrice = true %}
+                    {% set id = preparationIngredient.ingredient.id %}
+                    {% set missingIngredientPrice = missingIngredientPrice|merge({
+                        (id): preparationIngredient.ingredient.code
+                    }) %}
+                {% endif %}
+                {% if preparationIngredient.ingredient.allergen and (preparationIngredient.ingredient.allergen.name not in allergens) %}
+                    {% set allergens = allergens|merge([preparationIngredient.ingredient.allergen.name]) %}
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td>{{ preparation.id }}</td>
+                <td>{{ preparation.name }}</td>
+                <td>
+                    {% set at_least_one_allergen = false %}
+                    {% for allergenItem in allergens %}
+                        {% if at_least_one_allergen != false %} - {% endif %}
+                        {% set at_least_one_allergen = true %}
+                        {{ allergenItem }}
+                    {% endfor %}
+                </td>
+                <td class="center">
+                    {% if preparation.weight > 0 %}
+                        {{ preparation.weight|number_format(0, ',', ' ')}} g
+                    {% endif %}</td>
+                <td class="amount center">
+                    {% if missingIngredientPrice is not empty %}
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    {% endif %}
+                    {% if preparation.getCostBase is not null %}
+                        {{ preparation.getCostBase|number_format(3, ',', ' ') }} €
+                    {% else %}
+                        NC
+                    {% endif %}
+                    </td>
+                <td class="amount center">
+                    {% if preparation.weight > 0 and preparation.getCostBase is not null %}
+                        {{ (preparation.getCostBase/(preparation.weight/1000))|number_format(3, ',', ' ') }} €
+                    {% else %}
+                        NC
+                    {% endif %}
+                </td>
+                <td class="center">
+                    <span class="action_icon">
+                        <a href="{{ path('app_preparation_show', {'id': preparation.id}) }}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                        <a href="{{ path('app_preparation_edit', {'id': preparation.id}) }}"><i class="fa-solid fa-pen fa-lg"></i></a>
+                    </span>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>Aucune donnée disponible</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

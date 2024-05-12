@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des fournisseurs{% endblock %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_supplier_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Liste des fournisseurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for supplier in suppliers %}
+            <tr>
+                <td>{{ supplier.id }}</td>
+                <td>{{ supplier.name }}</td>
+                <td>
+                    <a href="{{ path('app_supplier_show', {'id': supplier.id}) }}"><i class="fa-regular fa-eye"></i></a>
+                    <a href="{{ path('app_supplier_edit', {'id': supplier.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,8 @@
+{{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4">{{ form_row(form.name) }}</div>
+        <div class="col-md-4">{{ form_row(form.updated_at) }}</div>
+    </div>
+    {{ form_errors(form) }}
+    <button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

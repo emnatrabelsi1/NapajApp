@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle recette{% endblock %}
+{% set active_link = 'recipe_index' %}
+
+{% block body %}
+    <h1>Nouvelle recette</h1>
+
+    {{ include('recipe/_form.html.twig') }}
+
+    <a href="{{ path('app_recipe_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des recettes</a>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prix fournisseurs{% endblock %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_supplier_price_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Prix Fournisseurs</h1>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code ingrédient</th>
+                <th>Fournisseur</th>
+                <th>Prix</th>
+                <th>Création</th>
+                <th>Mis à jour</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for supplier_price in supplier_prices %}
+            <tr>
+                <td>{{ supplier_price.id }}</td>
+                <td><a href={{ path("app_ingredient_edit", {'id':supplier_price.ingredient.id}, false) }}>{{ supplier_price.ingredient.code }}</a></td>
+                <td>{{ supplier_price.supplier.name }}</td>
+                <td class="amount"><a href="{{ path('app_supplier_price_edit', {'id': supplier_price.id}) }}">{{ supplier_price.price|number_format(3, ',', ' ') }} €</a></td>
+                <td>{{ supplier_price.createdAt ? supplier_price.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_supplier_price_show', {'id': supplier_price.id}) }}"><i class="fa-regular fa-eye"></i></a>
+                    <a href="{{ path('app_supplier_price_edit', {'id': supplier_price.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

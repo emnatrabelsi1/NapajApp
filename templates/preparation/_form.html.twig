@@ -1,0 +1,49 @@
+{% import "form_macro.html.twig" as form_macro %}
+{{ form_start(form) }}
+{{ encore_entry_script_tags('preparation-form') }}
+
+<div class="row">
+    <div class="col-md-4">{{ form_row(form.name) }}</div>
+    <div class="col-md-3">{{ form_row(form.weight) }}</div>
+</div>
+
+{{ form_errors(form.preparationIngredients) }}
+<div class="row">
+    <div class="col-md-12">Liste des ingrédients</div>
+    <div class="col-md-12">
+        <ul class="preparationIngredients" data-index="{{ form.preparationIngredients|length > 0 ? form.preparationIngredients|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_macro.preparationIngredient_form_prototype(form.preparationIngredients.vars.prototype)|e('html_attr') }}">
+            {% if form.preparationIngredients is not empty %}
+                <div class="row">
+                    <div class="col-4">Ingrédient</div>
+                    <div class="col-2">Poids (en g)</div>
+                    <div class="col-2">Volume (en L)</div>
+                    <div class="col-1">Quantité</div>
+                </div>
+                {% for ingredientField in form.preparationIngredients %}
+                    <li>
+                        {{ form_errors(ingredientField) }}
+                        <div class="row collection_item">
+                            <div class="col-4">{{ form_widget(ingredientField.ingredient) }}</div>
+                            <div class="col-2">{{ form_widget(ingredientField.weight) }}</div>
+                            <div class="col-2">{{ form_widget(ingredientField.volume) }}</div>
+                            <div class="col-2">{{ form_widget(ingredientField.quantity) }}</div>
+                            <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+
+<button type="button" id="addIngredientBtn" class="add_item_link btn btn-warning btn-icon-split btn-sm" data-collection-holder-class="preparationIngredients">
+    <span class="icon text-white-50">
+        <i class="fa-solid fa-plus"></i>
+    </span>
+    <span class="text">Ajouter un ingrédient</span>
+</button>
+
+<button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

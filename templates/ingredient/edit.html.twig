@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un ingredient{% endblock %}
+
+{% block body %}
+    <h1>Modifier un ingrédient</h1>
+    <br/>   
+    {{ include('ingredient/_form.html.twig', {'button_label': 'Valider'}) }}
+    <br/>
+    {{ include('ingredient/_delete_form.html.twig') }}
+
+    <a href="{{ path('app_ingredient_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des ingrédients</a>   
+    <br/>
+    <br/>   
+    
+    <div class="row">
+        <h1>Utilisation : </h1>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <table class="datatable table">
+                <thead>
+                    <tr>
+                        <th>Préparation</th>
+                        <th>Recette</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for preparationIngredient in ingredient.getPreparationIngredients %}
+                        {% set preparation = preparationIngredient.getPreparation %}
+                        <tr>
+                            <td><a target="_blank" href="{{ path('app_preparation_edit', {'id': preparation.id}) }}">{{ preparation.getName }}</a></td>
+                            <td>
+                                {% for recipeComposition in preparation.recipeCompositions %}
+                                <a target="_blank" href="{{ path('app_recipe_edit', {'id': recipeComposition.recipe.id}) }}">{{ recipeComposition.recipe.name }}</a>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

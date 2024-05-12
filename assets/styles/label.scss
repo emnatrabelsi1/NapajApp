@@ -1,0 +1,28 @@
+.productLabel3_8{
+    width: 30%;
+    height: 11%;
+    border: solid 1px;
+    display: inline-block;
+    padding: 5px;
+    position: relative;
+    .productLogo{
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+       
+    }
+    .productLogo > img{
+        width: 70px;
+    }
+    
+    .productIngredients{
+        font-size: 8px;
+    }
+    .productState{
+        font-size: 8px;
+        margin-top: 5px;
+        text-decoration: underline;
+        float: left;
+
+    }
+}

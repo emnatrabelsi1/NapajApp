@@ -1,0 +1,105 @@
+{% import "form_macro.html.twig" as form_macro %}
+{{ encore_entry_script_tags('recipe-form') }}
+
+{{ form_start(form) }}
+{% if isNapaj %}
+    {% set view_type = 'advanced' %}
+{% else %}
+    {% set view_type = 'basic' %}
+{% endif %}
+{% set view_type = 'advanced' %}
+<div class="hidden display-none">{{ form_row(form.company) }}</div>        
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-12">{{ form_row(form.name) }}</div>
+            <div class="col-md-8 ">{{ form_row(form.code) }}</div>
+            <div class="col-md-4 {% if manageCutting is same as true %} display-none {% endif %}">{{ form_row(form.selling_price) }}</div>
+            <div class="col-md-12">{{ form_row(form.description) }}</div>
+            <div class="col-md-4  {% if manageCutting is not same as true %} display-none {% endif %}">{{ form_row(form.is_frame) }}</div>
+        </div>
+
+        <br/>
+        {{ form_errors(form.recipeCompositions) }}
+    </div>
+
+    <div class="col-md-6 {% if view_type == 'basic' %} display-none {% endif %}">
+        <div class="col-md-12">{{ form_row(form.process) }}</div>
+        <br/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12"><h2>Compositions</h2></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <ul class="recipeCompositions" data-index="{{ form.recipeCompositions|length > 0 ? form.recipeCompositions|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_macro.recipeCompositions_form_prototype(form.recipeCompositions.vars.prototype)|e('html_attr') }}">
+                {% if form.recipeCompositions is not empty %}
+                    <div class="row">
+                        <div class="col-3">Préparation</div>
+                        <div class="col-3">Ingrédient</div>
+                        <div class="col-2">Poids (en g)</div>
+                        <div class="col-2">Volume (en L)</div>
+                        <div class="col-2">Qté (unité)</div>
+                    </div>
+                    {% for compositionField in form.recipeCompositions %}
+                        <li>
+                            {{ form_errors(compositionField) }}
+                            <div class="row collection_item">
+                                <div class="col-3">{{ form_widget(compositionField.preparation) }}</div>
+                                <div class="col-3">{{ form_widget(compositionField.ingredient) }}</div>
+                                <div class="col-2">{{ form_widget(compositionField.weight) }}</div>
+                                <div class="col-2">{{ form_widget(compositionField.volume) }}</div>
+                                <div class="col-1">{{ form_widget(compositionField.quantity) }}</div>
+                                <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+        </ul>
+        <button type="button" id="addRecipeCompositionBtn" class="add_item_link btn btn-warning btn-icon-split btn-sm" data-collection-holder-class="recipeCompositions">
+            <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+            </span>
+            <span class="text">Ajouter</span>
+        </button>
+    </div>
+</div>
+<br/>
+<div class="{% if manageCutting is not same as true %} display-none {% endif %}">
+    <div class="recipeCuttingContainer  {% if manageCutting is not same as true %} display-none {% endif %}">
+        <div class="row">
+            <div class="col-md-10"><h2>Découpes</h2></div>
+        </div>
+        <ul class="recipeCuttings" data-index="{{ form.recipeCuttings|length > 0 ? form.recipeCuttings|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_macro.recipeCuttings_form_prototype(form.recipeCuttings.vars.prototype)|e('html_attr') }}">
+                    <div class="row">
+                        <div class="col-5">Nombre de pièces</div>
+                        <div class="col-3">% perte</div>
+                        <div class="col-3">Info</div>
+                    </div>
+            {% for cuttingField in form.recipeCuttings %}
+                <li>
+                    {{ form_errors(cuttingField) }}
+                    <div class="row collection_item">
+                        <div class="col-5">{{ form_widget(cuttingField.piece) }}</div>
+                        <div class="col-3">{{ form_widget(cuttingField.loss_percentage) }}</div>
+                        <div class="col-3">{{ form_widget(cuttingField.info) }}</div>
+                        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="button" class="add_item_link btn btn-warning btn-icon-split btn-sm" data-collection-holder-class="recipeCuttings">
+            <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+            </span>
+            <span class="text">Nouvelle découpe</span>
+        </button>
+    </div>
+</div>
+
+<button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+
+{{ form_end(form) }}

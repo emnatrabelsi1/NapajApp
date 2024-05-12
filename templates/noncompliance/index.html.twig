@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Non-conformités{% endblock %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_noncompliance_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Non-conformités</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Déclarant</th>
+                <th>Type</th>
+                <th>Commande</th>
+                <th>Commentaire</th>
+                <th>Date déclaration</th>
+                <th>Statut</th>
+                <th>Date traitement</th>
+                <th>Commentaire traitement</th>
+                <th>Traitant</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for noncompliance in noncompliances %}
+            <tr>
+                <td>{{ noncompliance.declarant }}</td>
+                <td>{{ noncompliance.noncomplianceType }}</td>
+                <td>{% if noncompliance.relativeOrder is not null %}<a href="{{ path('app_order_show', {'id': noncompliance.relativeOrder.id}) }}">{{ noncompliance.relativeOrder }}</a>{% endif %}</td>
+                <td>{{ noncompliance.comment }}</td>
+                <td>{{ noncompliance.declarationDate ? noncompliance.declarationDate|date('d/m/Y') : '' }}</td>
+                <td>{{ noncompliance.noncomplianceState }}</td>
+                <td>{{ noncompliance.processingDate ? noncompliance.processingDate|date('d/m/Y') : '' }}</td>
+                <td>{{ noncompliance.processingComment }}</td>
+                <td>{{ noncompliance.assigned }}</td>
+                <td>
+                    <a href="{{ path('app_noncompliance_edit', {'id': noncompliance.id}) }}"><i class="fa-solid fa-pen fa-lg"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

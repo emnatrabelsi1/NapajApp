@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prix fournisseur{% endblock %}
+
+{% block body %}
+    <h1>Prix fournisseur</h1>
+    <a href="{{ path('app_supplier_price_edit', {'id': supplier_price.id}) }}"><button class="btn btn-secondary btn-sm add_button" type="button">Modifier</button></a>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ supplier_price.id }}</td>
+            </tr>
+            <tr>
+                <th>Code ingrédient Napaj</th>
+                <td>{{ supplier_price.name }}</td>
+            </tr>
+            <tr>
+                <th>Fournisseur</th>
+                <td>{{ supplier_price.supplier.getName }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ supplier_price.price }}</td>
+            </tr>
+            <tr>
+                <th>Création</th>
+                <td>{{ supplier_price.createdAt ? supplier_price.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_supplier_price_index') }}">Liste des prix</a>
+    {{ include('supplier_price/_delete_form.html.twig') }}
+{% endblock %}

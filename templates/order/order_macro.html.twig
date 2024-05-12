@@ -1,0 +1,15 @@
+{% macro displayOrderLinesInTable(orderLines, orderId) %}
+    {% for orderLine in orderLines %}
+        <input id="orderLineCheckboxDone{{ orderId}}_{{ orderLine.id }}" class="checkbox_in_table" onclick="doOrderLine('{{ path('app_order_line_do',{'id': orderLine.id}) }}', {{ orderId }}, {{ orderLine.id }} )" type="checkbox" {{ orderLine.done is same as true ? 'checked' : '' }}/>
+        <b>{{ orderLine.quantity|number_format(0, ',', ' ') }}x</b>
+        {% if orderLine.product is not null %}
+            {{ orderLine.product.getFullName }}
+        {% endif %}
+        
+        {% if orderLine.details is not null %}
+            {{ orderLine.details }}
+        {% endif %}
+        <br/>
+    {% endfor %}
+{% endmacro %}
+

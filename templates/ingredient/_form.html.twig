@@ -1,0 +1,56 @@
+{% import "form_macro.html.twig" as form_macro %}
+{{ form_start(form) }}
+<div class="hidden display-none">{{ form_row(form.company) }}</div>
+
+<div class="row">
+    <div class="col-md-3">{{ form_row(form.code) }}</div>
+    <div class="col-md-3">{{ form_row(form.name) }}</div>
+    <div class="col-md-1">{{ form_row(form.measure_unit) }}</div>
+    <div class="col-md-3">{{ form_row(form.ingredient_category) }}</div>
+    <div class="col-md-3">{{ form_row(form.allergen) }}</div>
+</div>
+{{ form_errors(form) }}
+<div class="row">
+    <div class="col-md-12"><h2>Prix</h2></div>
+</div>
+<div class="row">
+    <ul class="supplierPrices" data-index="{{ form.supplierPrices|length > 0 ? form.supplierPrices|last.vars.name + 1 : 0 }}"
+        data-prototype="{{ form_macro.supplierPrices_form_prototype(form.supplierPrices.vars.prototype)|e('html_attr') }}">
+        {% if form.supplierPrices is not empty %}
+            <div class="row">
+                <div class="col-2">Date</div>
+                <div class="col-4">Fournisseur</div>
+                <div class="col-3">Ref Fournisseur</div>
+                <div class="col-2">Prix</div>
+            </div>
+            {% for supplierPriceField in form.supplierPrices %}
+                <li>
+                    {{ form_errors(supplierPriceField) }}
+                    <div class="row collection_item">
+                        <div class="col-2">{{ supplierPriceField.created_at.vars.data|dateFormat }}</div>
+                        <div class="col-4">{{ form_widget(supplierPriceField.supplier) }}</div>
+                        <div class="col-3">{{ form_widget(supplierPriceField.name) }}</div>
+                        <div class="col-2">{{ form_widget(supplierPriceField.price) }}</div>
+                        <div class="display-none">
+                            {{ form_widget(supplierPriceField.ingredient) }}
+                            {{ form_widget(supplierPriceField.created_at) }}
+                        </div>
+                        <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+                    </div>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>
+<div class="row">
+    <div class="col-md-3">
+<button type="button" class="add_item_link btn btn-warning btn-icon-split btn-sm" data-collection-holder-class="supplierPrices">
+    <span class="icon text-white-50">
+        <i class="fa-solid fa-plus"></i>
+    </span>
+    <span class="text">Ajouter un prix</span>
+</button>
+</div>
+</div>
+<button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

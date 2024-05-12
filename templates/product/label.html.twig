@@ -1,0 +1,33 @@
+{{  encore_entry_link_tags('label') }}
+
+{% set col = 3 %}
+{% set row = 8 %}
+
+{% for currentRow in 1..row %}
+    {% for currentCol in 1..col %}
+        <div class="productLabel{{ col }}_{{ row }}">
+            <div class="productName">{{ product.name }}</div>
+            <div class="productIngredients">
+                <br/>
+                Ingrédients : 
+                {% set ingredientAlreadyDisplay = [] %}
+
+                {% for ingredient in ingredients %}
+                    {% if ingredient.name not in ingredientAlreadyDisplay %}
+                        {% set ingredientAlreadyDisplay = ingredientAlreadyDisplay|merge([ingredient.name]) %}
+                        {% if ingredient.allergen is not null %}
+                            <b>{{ ingredient.name }}</b> /
+                        {% else %}
+                            {{ ingredient.name }} /
+                        {% endif %}  
+                    {% endif %}  
+                {% endfor %}
+            </div>
+            <div class="productState">Produit congelé</div>
+            <div class="productLogo"><img src="{{ asset('build/img/logo_texte_noir.png') }}"></div>
+        </div>
+    {% endfor %}
+    <br/>
+{% endfor %}
+
+

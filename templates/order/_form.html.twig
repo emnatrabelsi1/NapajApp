@@ -1,0 +1,48 @@
+{% import "form_macro.html.twig" as form_macro %}
+{{ encore_entry_script_tags('order-form') }}
+
+{{ form_start(form, {'autocomplete': 'off'}) }}
+
+<div class="row">
+    <div class="col-md-3">{{ form_row(form.customer) }}</div>
+    <div class="col-md-3">{{ form_row(form.name) }}</div>
+    <div class="col-md-2">{{ form_row(form.delivery_date) }}</div>
+    <div class="col-md-2">{{ form_row(form.event_date) }}</div>
+</div>
+<div class="row">
+    <div class="col-md-12">Lignes de commande</div>
+    <div class="col-md-12">
+        <ul class="orderLines" data-index="{{ form.orderLines|length > 0 ? form.orderLines|last.vars.name + 1 : 0 }}"
+            data-prototype="{{ form_macro.orderLines_form_prototype(form.orderLines.vars.prototype)|e('html_attr') }}">
+                {% if form.orderLines is not empty %}
+                    <div class="row">
+                        <div class="col-3">Produit</div>
+                        <div class="col-1">Quantité</div>
+                        <div class="col-5">Détails</div>
+                    </div>
+                    {% for orderLine in form.orderLines %}
+                        <li>
+                            {{ form_errors(orderLine) }}
+                            <div class="row collection_item">
+                                <div class="col-4">{{ form_widget(orderLine.product) }}</div>
+                                <div class="col-1">{{ form_widget(orderLine.quantity) }}</div>
+                                <div class="col-5">{{ form_widget(orderLine.details) }}</div>
+                                <div class="col-1"><span class="delete_collection_item"><i class="fa-solid fa-trash"></i></span></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+        </ul>
+        <button type="button" class="add_item_link btn btn-warning btn-icon-split btn-sm" data-collection-holder-class="orderLines">
+            <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+            </span>
+            <span class="text">Ajouter une ligne</span>
+        </button>
+    </div>
+</div>
+<button id="submitOrderButton" class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+<span class="display-none pull-right" style="margin-right: 10px;color:red;line-height:40px;" id="missing_order_line">Veuillez remplir au moins une ligne de commande</span>
+<span class="display-none pull-right" style="margin-right: 10px;color:red;line-height:40px;" id="missing_details">Veuillez sélectionner un produit ou saisir un détail</span>
+{{ form_end(form) }}
+

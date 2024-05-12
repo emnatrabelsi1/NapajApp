@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une demande{% endblock %}
+
+{% block body %}
+    <h1>Modifier une demande</h1>
+
+    {{ include('supply_order/_form.html.twig', {'button_label': 'Valider'}) }}
+    <br/>
+
+    {{ include('supply_order/_delete_form.html.twig') }}
+    <a href="{{ path('app_supply_order_index') }}"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</a>
+
+{% endblock %}

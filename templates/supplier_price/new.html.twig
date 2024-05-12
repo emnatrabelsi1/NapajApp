@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un prix fournisseur{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un prix fournisseur</h1>
+
+    {{ include('supplier_price/_form.html.twig') }}
+
+    <a href="{{ path('app_supplier_price_index') }}">Liste des prix</a>
+{% endblock %}

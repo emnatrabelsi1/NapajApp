@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fournisseur{% endblock %}
+
+{% block body %}
+    <h1>Fournisseur</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ supplier.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom fournisseur</th>
+                <td>{{ supplier.name }}</td>
+            </tr>
+            <tr>
+                <th>Mise à jour le</th>
+                <td>{{ supplier.updatedAt ? supplier.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_supplier_index') }}">Liste des fournisseurs</a>
+
+    <a href="{{ path('app_supplier_edit', {'id': supplier.id}) }}"><i class="fa-solid fa-pen"></i></a>
+
+    {{ include('supplier/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Clients{% endblock %}
+{% set active_link = 'customer_index' %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_customer_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Clients</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Adresse 2</th>
+                <th>CP</th>
+                <th>Ville</th>
+                <th>Itineraire</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <td>{{ customer.id }}</td>
+                <td><a href="{{ path('app_customer_edit', {'id': customer.id}) }}">{{ customer.name }}</a></td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.address2 }}</td>
+                <td>{{ customer.zipcode }}</td>
+                <td>{{ customer.city }}</td>
+                <td>
+                    <center><a target="_blank" href="{{ customer.route }}"><i class="fa-solid fa-car"></i></a></center>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

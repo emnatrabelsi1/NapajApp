@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+
+<div class="row">
+    <div class="col-md-4">{{ form_row(form.name) }}</div>
+    <div class="col-md-2">{{ form_row(form.piece_price) }}</div>
+    <div class="col-md-2">{{ form_row(form.piece_quantity) }}</div>
+    <div class="col-md-4">{{ form_row(form.recipe) }}</div>
+</div>
+<div class="row">
+    <div class="col-md-4">{{ form_row(form.tags) }}</div>
+    <div class="col-md-2">{{ form_row(form.stock) }}</div>
+    <div class="col-md-2">{{ form_row(form.minimum_stock) }}</div>
+</div>
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.imageFile, {label: 'Image', widht: '50px'}) }}</div>
+</div>
+
+<button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

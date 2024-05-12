@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une commande{% endblock %}
+
+{% block body %}
+    <h1>Modifier une commande</h1>
+
+    {{ include('order/_form.html.twig', {'button_label': 'Valider'}) }}
+
+    <a href="{{ path('app_order_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des commandes</a>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ include('order/_delete_form.html.twig') }}
+    {% endif %}
+
+{% endblock %}

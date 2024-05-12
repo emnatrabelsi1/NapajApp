@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% import '/order/order_macro.html.twig' as order_macro %}
+
+{% block title %}Commandes{% endblock %}
+{% set active_link = 'order_index' %}
+{% block heading_h1 %}Commandes archivées(<a href="{{ path('app_order_index') }}">Retour aux commandes</a>){% endblock %}
+
+{% block body %}
+{{ encore_entry_script_tags('order-list') }}
+    {{ include('order/_filter.html.twig') }}
+    
+    <table class="table archived_order_table">
+        <thead>
+            <tr>
+                <th class="display-none">Id</th>
+                <th>Client</th>
+                <th>Détail</th>
+                <th>Description</th>
+                <th>Date Livraison</th>
+                <th>Date évènement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set today = date() %}
+        {% set displayedWeek = false %}
+
+        {% for order in orders %}
+            {% set orderWeek = order.deliveryDate|date("W") %}
+            {% if orderWeek != displayedWeek %}
+                {% if orderWeek < today|date("W") %}
+                {% if displayedWeek is same as false %}
+                        <tr class="delivery_week_header">
+                            <td colspan="7">Anciennes commandes</td>
+                        </tr>
+                        {% set displayedWeek = 0 %}
+                    {% endif %}
+                {% else %}
+                    {% if displayedWeek != orderWeek %}
+                        {% set displayedWeek = orderWeek %}
+                        {% if displayedWeek == today|date("W") %}
+                            {% set labelWeek = 'Cette semaine' %}
+                        {% else %}
+                            {% set labelWeek = 'Semaine +'~ (displayedWeek - today|date("W"))%}
+                        {% endif %}
+                        <tr class="delivery_week_header">
+                            <td colspan="7">{{ labelWeek }}</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+            {% set delivery_color_class = 'delivery_color_' ~ order.deliveryDate|dayInWeek() %}
+           
+            <tr data-customer-id="{{ order.customer.id }}" id="orderElement{{ order.id }}">
+                <td class="display-none">{{ order.id }}</td>
+                <td><a target="_blank" href="{{ order.customer.route }}"><i class="fa-solid fa-road"></i> </a>{{ order.customer.name }}</td>
+                <td>
+                    {{ order_macro.displayOrderLinesInTable(order.orderLines, order.id) }}
+                </td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.deliveryDate ? order.deliveryDate|dateFormat(false): '' }}</td>
+                <td>{{ order.eventDate ? order.eventDate|dateFormat(false): '' }}</td>
+                <td >
+                    <a class="action_icon" href="{{ path('app_order_show', {'id': order.id}) }}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                    <a class="action_icon" onclick="if(confirm('Êtes-vous sûr de vouloir désarchiver cet élément ?')){unArchiveOrder('{{ path('app_order_unarchive',{'id': order.id}) }}', {{ order.id }} )};"><i class="fa-solid fa-arrows-turn-right fa-lg"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+<script type="text/javascript">
+    function unArchiveOrder(url, orderId){
+        $.ajax({
+            type: 'POST',
+            url : url,
+            success: function (response) {
+                if(response == "OK"){
+                    $('#orderElement'+orderId).remove();
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

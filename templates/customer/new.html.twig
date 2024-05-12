@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Client{% endblock %}
+{% set active_link = 'customer_index' %}
+
+{% block body %}
+    <h1>Nouveau Client</h1>
+
+    {{ include('customer/_form.html.twig') }}
+
+    <a href="{{ path('app_customer_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des clients</a>
+{% endblock %}

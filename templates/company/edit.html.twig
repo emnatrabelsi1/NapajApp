@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier entreprise{% endblock %}
+
+{% block body %}
+    {{ encore_entry_script_tags('company-form') }}
+
+    <h1>Modifier entreprise</h1>
+    {% if ingredientCount > 0 %} 
+        <button id="clearIngredientBtn" class="btn btn-danger" onclick="if(confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')){ajaxCallFct('{{ path('clear_ingredients_data',{'id': company.id}) }}', $('#generateIngredientsBtn').removeAttr('disabled'))}">Supprimer les ingrédients/préparation/recettes</button><br/>
+    {% endif %}
+    <br/>
+    <button {% if ingredientCount > 0 %} disabled="disabled" {% endif %} id="generateIngredientsBtn" class="btn btn-info" onclick="ajaxCallFct('{{ path('generate_demo_data',{'id': company.id}) }}', $('#generateIngredientsBtn').attr('disabled','disabeld'))">Générer ingrédients de base</button><br/>
+
+    {{ include('company/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <a href="{{ path('app_company_index') }}"><i class="fa-solid fa-arrow-left"></i> Retour à la liste</a>
+
+    {{ include('company/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une préparation{% endblock %}
+
+{% block body %}
+    <h1>Ajouter une préparation</h1>
+
+    {{ include('preparation/_form.html.twig') }}
+
+    <a href="{{ path('app_preparation_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des préparations</a>
+{% endblock %}

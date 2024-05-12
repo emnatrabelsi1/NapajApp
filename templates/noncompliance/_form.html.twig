@@ -1,0 +1,33 @@
+{% import "form_macro.html.twig" as form_macro %}
+
+{{ form_start(form, {'autocomplete': 'off'}) }}
+{% if action is defined and action == "new" %} 
+    {% set disableMainFields = {} %}
+    {% set displayClassAdditionnalFields = 'display-none' %}
+{% else %}
+    {% set disableMainFields = {'disabled': "disabled"} %}
+    {% set displayClassAdditionnalFields = '' %}
+{% endif %}
+
+<div class="row">
+    <div class="col-md-2">{{ form_row(form.noncomplianceType, disableMainFields ) }}
+        <span class="additionnal_input_info"><a href="{{ path('app_noncompliance_type_new') }}">Ajouter un type</a></span>
+    </div>
+    <div class="col-md-4">{{ form_row(form.relativeOrder, disableMainFields) }}</div>
+    <div class="col-md-2">{{ form_row(form.declaration_date, disableMainFields) }}</div>
+</div>
+<div class="row">
+    <div class="col-md-5">{{ form_row(form.comment, disableMainFields) }}</div>
+</div>
+<div class="row {{ displayClassAdditionnalFields }}">
+    <div class="col-md-2">{{ form_row(form.noncomplianceState) }}</div>
+    <div class="col-md-2">{{ form_row(form.processing_date) }}</div>
+    <span class="display-none">{{ form_row(form.declarant) }}</span>
+    <span class="display-none">{{ form_row(form.assigned) }}</span>
+</div>
+<div class="row {{ displayClassAdditionnalFields }}">
+    <div class="col-md-5">{{ form_row(form.processing_comment) }}</div>
+</div>
+
+<button class="btn btn-success pull-right">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

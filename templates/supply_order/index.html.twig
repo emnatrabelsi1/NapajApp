@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Approvisionnement{% endblock %}
+
+{% block body %}
+    <a class="pull-right" href="{{ path('app_supply_order_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Approvisionnement</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date création</th>
+                <th>Demandeur</th>
+                <th>Fournisseur</th>
+                <th>Commentaire</th>
+                <th>Montant</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for supply_order in supply_orders %}
+            <tr>
+                <td>{{ supply_order.createdAt|dateFormat(false) }}</td>
+                <td><b>{{ supply_order.company.name }}</b> / {{ supply_order.user.email }}</td>
+                <td>{{ supply_order.supplier.name }}</td>
+                <td>{{ supply_order.comment }}</td>
+                <td>{{ supply_order.amount|priceFormat(0,',','') }}</td>
+                <td>
+                    {% set badge_class = 'value2' %}
+                    {% if supply_order.state.code == 'pending' %}
+                        {% set badge_class = 'badge badge-warning' %}
+                    {% endif %}
+                    {% if supply_order.state.code == 'refused' %}
+                        {% set badge_class = 'badge badge-danger' %}
+                    {% endif %}
+                    {% if supply_order.state.code == 'canceled' %}
+                        {% set badge_class = 'badge badge-secondary' %}
+                    {% endif %}
+                    {% if supply_order.state.code == 'validated' %}
+                        {% set badge_class = 'badge badge-success' %}
+                    {% endif %}
+                    <h2><span class="{{ badge_class }}">{{ supply_order.state.name }}</span></h2>
+                </td>
+                <td>
+                    {% if supply_order.state.code == 'pending' %}
+                        <a href="{{ path('app_supply_order_edit', {'id': supply_order.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                    {% else %}
+                        <a href="{{ path('app_supply_order_show', {'id': supply_order.id}) }}"><i class="fa-solid fa-eye"></i></a>
+
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucune demande d'aprovisionnement en cours</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des recettes{% endblock %}
+{% set active_link = 'recipe_index' %}
+{% block body %}
+    <a class="pull-right" href="{{ path('app_recipe_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+    <h1>Liste des recettes</h1>
+
+    <table class="datatable table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Recette</th>
+                <th class="center">Coût</th>
+                {% if manageCutting is same as true %}
+                    <th class="center">Découpes</th>
+                {% else %}
+                    <th class="center">Prix de vente</th>
+                {% endif %}
+                <th class="center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for recipe in recipes %}
+            {% set recipe_weight = 0 %}
+            {% set invalidPrice = false %}
+            {% set invalidCompositionQuantity = false %}
+            {% set missingIngredientPrice = [] %}
+            {% set allergens = [] %}
+            {% for composition in recipe.getRecipeCompositions %}
+                {% set recipe_weight = recipe_weight + composition.getWeight %}
+                {% if composition.getWeight == 0 and composition.getQuantity == 0 %}
+                    {% set invalidCompositionQuantity = true %}
+                {% endif %}
+
+                {% if composition.preparation %}
+                    {% for preparationIngredient in composition.preparation.preparationIngredients %}
+                        {% if preparationIngredient.ingredient.allergen and (preparationIngredient.ingredient.allergen.name not in allergens) %}
+                            {% set allergens = allergens|merge([preparationIngredient.ingredient.allergen.name]) %}
+                        {% endif %}
+                        {% if preparationIngredient.ingredient.price <= 0 %}
+                            {% set invalidPrice = true %}
+                            {% set id = preparationIngredient.ingredient.id %}
+                            {% set missingIngredientPrice = missingIngredientPrice|merge({
+                                (id): preparationIngredient.ingredient.code
+                            }) %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            <tr>
+                <td data-order="{{ recipe.Name }}"><a href="{{ path('app_recipe_edit',{id: recipe.id}) }}"><b>{{ recipe.Name }}</b></a><br/>
+                    <span class="codeTable">{{ recipe.code }}</span><br/>
+                    <span class="codeTable">
+                    {% set at_least_one_allergen = false %}
+                    {% for allergenItem in allergens %}
+                        {% if at_least_one_allergen != false %}
+                             - 
+                        {% else %}
+                        <b>Allergènes : </b>
+                        {% endif %}
+                        {% set at_least_one_allergen = true %}
+                        {{ allergenItem }}
+                    {% endfor %}
+                </span>
+                </td>
+                <td class="center">
+                    {% if missingIngredientPrice is not empty or invalidCompositionQuantity is same as true %}
+                        <a href="{{ path('app_recipe_edit',{id: recipe.id}) }}"><i class="fa-solid fa-triangle-exclamation"></i></a>
+                    {% elseif recipeCosts[recipe.getId] > 0 %}
+                        <span class="recipePrice">{{ recipeCosts[recipe.getId]|priceFormat(3) }}</span>
+                    {% endif %}
+                    <br/>
+                    {% set KgPrice = 0 %}
+                    {% if recipe_weight > 0 %}
+                        {% set KgPrice = (recipeCosts[recipe.getId] / (recipe_weight/1000))  %}
+                        <span class="recipePriceKg">({{ KgPrice|priceFormat(3) }} / Kg)</span>
+                    {% endif %}
+                </td>
+                {% if manageCutting is same as true %}
+                    <td>
+                        {% for cutting in recipe.recipeCuttings %}
+                            {% set piece_weight = (recipe_weight * (100-cutting.lossPercentage) / 100 / cutting.piece) %}
+                            {% if piece_weight > 0 %}
+                                {# Coût d'une part en respectant le coût au Kg (sans tenir compte des pertes) #}
+                                {% set pieceCostAccordingWeight = (KgPrice * piece_weight/1000 ) %}
+                                {# Coût d'une part en incluant les pertes #}
+                                {% set pieceCost =  (recipeCosts[recipe.getId] / cutting.piece) %}
+                                <div class="cuttingDetails">
+                                    <span>{{ cutting.piece }} <i class="fa-solid fa-puzzle-piece"></i> ({{ piece_weight|number_format(2) }}g)</span>
+                                    <span>: 
+                                        {% if cutting.lossPercentage != 0 %} {{ pieceCostAccordingWeight|priceFormat(3) }} / {% endif %} 
+                                        {{ pieceCost|priceFormat(3) }}</span>
+                                    <br/> 
+                                    {% if cutting.lossPercentage == 0 %}
+                                        Perte : {{ cutting.lossPercentage|number_format(0, ',', ' ') ~ '%' }}
+                                    {% else %}
+                                        Perte : {{ cutting.lossPercentage|number_format(0, ',', ' ') ~ '% / ' ~(recipe_weight * (cutting.lossPercentage / 100) )|number_format(0, ',', ' ') }}g ({{ (recipeCosts[recipe.getId] * (cutting.lossPercentage / 100) )|priceFormat(3) }})
+                                    {% endif %}
+                                    <br/> <b>Prix à 80% : <span>: 
+                                        {% if cutting.lossPercentage != 0 %} {{ (pieceCostAccordingWeight * 5 )|priceFormat(3) }} / {% endif %}
+                                        {{ (pieceCost * 5)|priceFormat(3) }} </b></span></div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                {% else %}
+                    <td class="center">
+                        {% if missingIngredientPrice is empty and invalidCompositionQuantity is same as false and recipeCosts[recipe.getId] > 0 and recipe.sellingPrice > 0 %}
+                            {% set marginPrice = ((recipe.sellingPrice - recipeCosts[recipe.getId])/recipe.sellingPrice) * 100 %}
+                            {{ recipe.sellingPrice|priceFormat(2) }}
+                            <br/>
+                            {% set margin_colorClass = marginPrice > 70 ? 'marginPrice_green' : (marginPrice > 50 ? 'marginPrice_orange' : 'marginPrice_red') %}
+                            <span class="marginPrice {{ margin_colorClass }}">
+                                MB : {{ marginPrice|number_format(2, ',', ' ') ~ '%' }}
+                            </span>
+                        {% endif %}
+                    </td>
+                {% endif %}
+                <td class="center">
+                    <span class="action_icon">
+                        <a href="{{ path('app_recipe_show', {'id': recipe.id}) }}"><i class="fa-regular fa-eye fa-lg"></i></a>
+                        <span class="inline-block">{{ include('recipe/_delete_form.html.twig',{'btn_type': 'fa-trash'}) }}</span>
+                        <a href="{{ path('app_recipe_duplicate', {'id': recipe.id}) }}"><i class="fa-regular fa-clone fa-lg"></i></a>
+                    </span>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>Aucun résulat</th>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

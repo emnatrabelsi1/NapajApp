@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des unités{% endblock %}
+
+{% block body %}
+    <h1>Liste des unités</h1>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for measure_unit in measure_units %}
+            <tr>
+                <td>{{ measure_unit.id }}</td>
+                <td>{{ measure_unit.name }}</td>
+                <td>
+                    <a href="{{ path('app_measure_unit_show', {'id': measure_unit.id}) }}"><i class="fa-regular fa-eye"></i></a>
+                    <a href="{{ path('app_measure_unit_edit', {'id': measure_unit.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune donnée disponible</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_measure_unit_new') }}"><button class="btn btn-primary add_button" type="button">Ajouter</button></a>
+{% endblock %}

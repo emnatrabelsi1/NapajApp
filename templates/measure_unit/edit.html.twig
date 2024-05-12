@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Unité{% endblock %}
+
+{% block body %}
+    <h1>Unité</h1>
+
+    {{ include('measure_unit/_form.html.twig', {'button_label': 'Valider'}) }}
+    <br/>
+    {{ include('measure_unit/_delete_form.html.twig') }}
+    <a href="{{ path('app_measure_unit_index') }}"><i class="fa-solid fa-arrow-left"></i>Liste des unités</a>
+{% endblock %}

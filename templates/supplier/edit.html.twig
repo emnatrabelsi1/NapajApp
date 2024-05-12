@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un fournisseur{% endblock %}
+
+{% block body %}
+    <h1>Modifier un fournisseur</h1>
+
+    {{ include('supplier/_form.html.twig', {'button_label': 'Valider'}) }}
+    <br/>
+    {{ include('supplier/_delete_form.html.twig') }}
+    <a href="{{ path('app_supplier_index') }}"><i class="fa-solid fa-arrow-left"></i> Liste des fournisseurs</a>
+{% endblock %}

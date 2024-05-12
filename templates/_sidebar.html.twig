@@ -1,0 +1,113 @@
+{% if active_link is not defined %}
+    {% set active_link = '' %}
+{% endif %}
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ path('index')}}">
+        <div class="sidebar-brand-text mx-3"><img width="130" src="{{ asset('build/img/logo_texte_blanc.png') }}"></div>
+    </a>
+    {# <hr class="sidebar-divider my-0">
+    <li class="nav-item {{ ('index' is same as active_link) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ path('index')}}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Accueil</span></a>
+    </li> #}
+    
+    {% if isNapaj and app.user.company.featureOrder %}
+        <hr class="sidebar-divider">
+        <li class="nav-item {{ ('order_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_order_index')}}">
+                <i class="fas fa-fw fa-book"></i>
+                <span>Commandes</span></a>
+        </li>
+    {% endif %}
+    {% if app.user.company.featureProduct %}
+        <li class="nav-item {{ ('product_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_product_index')}}">
+                <i class="fas fa-fw fa-book"></i>
+                <span>{% if isNapaj %}Produits{% else %}Mes produits{% endif %}</span></a>
+        </li>
+    {% endif %}
+    {% if isNapaj %}
+        <li class="nav-item {{ ('noncompliance_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_noncompliance_index')}}">
+                <i class="fas fa-fw fa-warning"></i>
+                <span>Non-conformités</span></a>
+        </li>
+        <li class="nav-item {{ ('supply_order_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_supply_order_index')}}">
+                <i class="fas fa-fw fa-book"></i>
+                <span>Approvisionnement</span></a>
+        </li>
+        <hr class="sidebar-divider">
+
+        <li class="nav-item">
+            <a class="nav-link" target="_blank" href="{{ asset('build/doc/catalogue_produit_napaj.pdf') }}">
+                <i class="fas fa-fw fa-book"></i>
+                <span>Catalogue Napaj</span></a>
+        </li>
+    {% endif %}
+
+    {% if app.user.company.featureRecipe %}
+        <hr class="sidebar-divider">
+
+        <li class="nav-item {{ ('recipe_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_recipe_index')}}">
+                <i class="fa fa-sticky-note-o"></i>
+                <span>Mes plats</span></a>
+        </li>
+        <li class="nav-item {{ ('preparation_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_preparation_index')}}">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Mes préparations</span></a>
+        </li>
+
+        <li class="nav-item {{ ('product_index' is same as active_link) ? 'active' : '' }}">
+            <a class="nav-link" href="{{ path('app_ingredient_index')}}">
+                <i class="fas fa-fw fa-book"></i>
+                <span>Ingredients</span></a>
+        </li>
+
+        <hr class="sidebar-divider">
+
+    {% endif %}
+        
+    {% if not isNapaj and app.user.company.featureOrder %}
+    <hr class="sidebar-divider">
+    <li class="nav-item {{ ('order_index' is same as active_link) ? 'active' : '' }}">
+        <a class="nav-link" href="{{ path('app_order_index')}}">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Commandes desserts</span></a>
+    </li>
+    {% endif %} 
+    {% if is_granted('ROLE_ADMIN') %}
+
+    <hr class="sidebar-divider">
+    <li class="nav-item {{ ('settings' is same as active_link) ? 'active' : '' }}">
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-wrench"></i>
+            <span>Paramétrages</span>
+        </a>
+        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Paramétrages :</h6>
+                    <a class="collapse-item" href="{{ path('app_supplier_price_index')}}">Prix fournisseurs</a>
+                    <a class="collapse-item" href="{{ path('app_supplier_index')}}">Fournisseurs</a>
+                    <a class="collapse-item" href="{{ path('app_company_index')}}">Entreprises</a>
+                    <a class="collapse-item" href="{{ path('app_user_index')}}">Utilisateurs</a>
+                    <a class="collapse-item" href="{{ path('app_ingredient_category_index')}}">Catégories d'ingrédients</a>
+                    <a class="collapse-item" href="{{ path('app_customer_index')}}">Clients</a>
+            </div>
+        </div>
+    </li>
+    {% endif %}
+
+
+
+
+    <hr class="sidebar-divider d-none d-md-block">
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+</ul>
